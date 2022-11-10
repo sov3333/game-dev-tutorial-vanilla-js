@@ -18,6 +18,15 @@ backgroundLayer4.src = '/2-parallax-backgrounds/images/layer-4.png';
 const backgroundLayer5 = new Image();
 backgroundLayer5.src = '/2-parallax-backgrounds/images/layer-5.png';
 
+const slider = document.getElementById('slider');
+slider.value = gameSpeed;
+const showGameSpeed = document.getElementById('showGameSpeed');
+showGameSpeed.innerHTML = gameSpeed;
+slider.addEventListener('change', function(e){
+    gameSpeed = e.target.value;
+    showGameSpeed.innerHTML = gameSpeed;
+});
+
 // Parallax effect is when foreground layer moves faster than the background layer
 
 // Tutorial from: https://youtu.be/GFO_txvwK_c?t=3675
