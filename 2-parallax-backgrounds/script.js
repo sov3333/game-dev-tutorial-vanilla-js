@@ -16,12 +16,12 @@ backgroundLayer4.src = '/2-parallax-backgrounds/images/layer-4.png';
 const backgroundLayer5 = new Image();
 backgroundLayer5.src = '/2-parallax-backgrounds/images/layer-5.png';
 
-let x = 0; // test animation
+let x = 0; 
 
 function animate() {
-    ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT); // clear old paint
-    ctx.drawImage(backgroundLayer4, x, 0); // replace 0 with x to test animation
-    x--; // test animation
+    ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT); 
+    ctx.drawImage(backgroundLayer4, x, 0); 
+    x -= gameSpeed; // scrolling of game attached to gameSpeed variable
     requestAnimationFrame(animate);
 }
 animate();
