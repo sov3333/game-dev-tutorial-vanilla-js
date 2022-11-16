@@ -4,6 +4,7 @@ window.addEventListener('load', function() {
     const ctx = canvas.getContext('2d');
     canvas.width = 800;
     canvas.height = 720;
+    let enemies = [];
 
     class InputHandler {
         constructor(){
@@ -46,8 +47,8 @@ window.addEventListener('load', function() {
             this.weight = 1; // gravity
         }
         draw(context){
-            context.fillStyle = 'white';
-            context.fillRect(this.x, this.y, this.width, this.height);
+            // context.fillStyle = 'white';
+            // context.fillRect(this.x, this.y, this.width, this.height);
 
             // draw Player at bottom left + select (source) frame from spritesheet + stretch image to fill available area
             context.drawImage(this.image, this.frameX*this.width,this.frameY*this.height,this.width,this.height, this.x,this.y,this.width,this.height); 
@@ -104,8 +105,38 @@ window.addEventListener('load', function() {
         }
     }
 
-    function handleEnemies(){
-        
+    class Enemy {
+        constructor(gameWidth, gameHeight){
+            this.gameWidth = gameWidth;
+            this.gameHeight = gameHeight;
+            this.width = 160;
+            this.height = 119;
+            this.image = document.getElementById('enemyImage');
+            this.x = this.gameWidth;
+            this.y = this.gameHeight - this.height;
+            this.frameX = 0;
+            this.speed = 8;
+        }
+        draw(context){
+            context.drawImage(this.image, 0*this.width,0,this.width,this.height, this.x, this.y, this.width, this.height);
+        }
+        update(){
+            this.x -= this.speed;
+        }
+    }
+
+    function handleEnemies(deltaTime){
+        if (enemyTimer > enemyInterval + randomEnemyInterval){
+            enemies.push(new Enemy(canvas.width, canvas.height));
+            randomEnemyInterval = Math.random() * 1000 + 500;
+            enemyTimer = 0;
+        } else {
+            enemyTimer += deltaTime;
+        }
+        enemies.forEach(enemy => {
+            enemy.draw(ctx);
+            enemy.update();
+        })
     }
 
     function displayStatusText(){
@@ -115,14 +146,26 @@ window.addEventListener('load', function() {
     const input = new InputHandler();
     const player = new Player(canvas.width, canvas.height);
     const background = new Background(canvas.width, canvas.height);
+    // const enemy1 = new Enemy(canvas.width, canvas.height);
+
+    let lastTime = 0; // helper var to hold value of timeStamp from previous animation frame
+    let enemyTimer = 0;
+    let enemyInterval = 1000;
+    let randomEnemyInterval = Math.random() * 1000 + 500; // between 500ms and 1500ms
     
-    function animate(){
+    function animate(timeStamp){
+        const deltaTime = timeStamp - lastTime; // difference in milliseconds b/w TS from this loop vs previous loop -> ms computer needs to serve 1 animation frame
+        lastTime = timeStamp; // so that lastTime can be used in next loop as the timestamp of previous loop
+        // console.log(deltaTime); // 1000ms / 60fps ~~ expected result: ~ 16.xxx
         ctx.clearRect (0,0,canvas.width,canvas.height);
         background.draw(ctx); // draw background first, so player is visible in front
-        background.update();
+        background.update(); // controls scrolling bg
         player.draw(ctx);
         player.update(input);
+        // enemy1.draw(ctx);
+        // enemy1.update();
+        handleEnemies(deltaTime); // above 2 lines moved to handleEmenies() function
         requestAnimationFrame(animate); // pass in name of parent function to create endless animation loop
     }
-    animate(); 
+    animate(0); 
 });
