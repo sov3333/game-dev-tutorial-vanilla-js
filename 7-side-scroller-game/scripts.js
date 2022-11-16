@@ -84,25 +84,26 @@ window.addEventListener('load', function() {
             this.frameY = 0;
         }
         draw(context){
-            // // collision detection
+            context.lineWidth = 5;
+            context.strokeStyle = 'white';
             // // rect hitbox
-            // context.strokeStyle = 'white';
             // context.strokeRect(this.x, this.y, this.width, this.height);
             // // circular hitbox
-            // context.beginPath();
-            // context.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI * 2);
-            // context.stroke();
+            context.beginPath();
+            context.arc(this.x + this.width/2, this.y + this.height/2 + 20, this.width/3, 0, Math.PI * 2);
+            context.stroke();
 
             // draw Player at bottom left + select (source) frame from spritesheet + stretch image to fill available area
             context.drawImage(this.image, this.frameX*this.width,this.frameY*this.height,this.width,this.height, this.x,this.y,this.width,this.height); 
         }
         update(input, deltaTime, enemies){
             // collision detection
+            // explanation at 5h 50m 10s: https://youtu.be/GFO_txvwK_c?t=21010
             enemies.forEach(enemy => {
-                const dx = (enemy.x + enemy.width/2) - (this.x + this.width/2);
-                const dy = (enemy.y + enemy.height/2) - (this.y + this.height/2);
+                const dx = (enemy.x + enemy.width/2 - 20) - (this.x + this.width/2);
+                const dy = (enemy.y + enemy.height/2) - (this.y + this.height/2 + 20);
                 const distance = Math.sqrt(dx*dx+dy*dy);
-                if (distance < enemy.width/2 + this.width/2){
+                if (distance < enemy.width/3 + this.width/3){
                     gameOver = true;
                 }
             })
@@ -189,11 +190,13 @@ window.addEventListener('load', function() {
             this.markedForDeletion = false;
         }
         draw(context){
-            // context.strokeStyle = 'white';
+            context.lineWidth = 5;
+            context.strokeStyle = 'white';
             // context.strokeRect(this.x, this.y, this.width, this.height);
-            // context.beginPath();
-            // context.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI * 2);
-            // context.stroke();
+            context.beginPath();
+            context.arc(this.x + this.width/2 - 20, this.y + this.height/2, this.width/3, 0, Math.PI * 2);
+            context.stroke();
+
             context.drawImage(this.image, this.frameX*this.width,0,this.width,this.height, this.x, this.y, this.width, this.height);
         }
         update(deltaTime){ // keep track how many ms passed bw individual calls, after threshold reached swap frames in spritesheet
