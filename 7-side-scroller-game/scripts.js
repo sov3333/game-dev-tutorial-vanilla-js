@@ -31,7 +31,27 @@ window.addEventListener('load', function() {
     }
 
     class Player {
-
+        constructor(gameWidth, gameHeight){
+            this.gameWidth = gameWidth;
+            this.gameHeight = gameHeight;
+            this.width = 200;
+            this.height = 200;
+            this.x = 0;
+            this.y = this.gameHeight - this.height; // bottom
+            this.image = document.getElementById('playerImage');
+        }
+        draw(context){
+            context.fillStyle = 'white';
+            context.fillRect(this.x, this.y, this.width, this.height);
+            // context.drawImage(this.image, 0, 0); // draw Player at top left
+            // context.drawImage(this.image, this.x, this.y); // draw Player at bottom left
+            // context.drawImage(this.image, this.x, this.y, this.width, this.height); // draw Player at bottom left + stretch image to fill available area
+            // context.drawImage(this.image, sx,sy,sw,sh, this.x,this.y,this.width,this.height); // draw Player at bottom left + stretch image to fill available area + select (source) frame from spritesheet
+            context.drawImage(this.image, 0,0,this.width,this.height, this.x,this.y,this.width,this.height); // draw Player at bottom left + stretch image to fill available area + select (source) frame from spritesheet
+        }
+        update(){
+            this.x++;
+        }
     }
 
     class Background {
@@ -47,8 +67,13 @@ window.addEventListener('load', function() {
     }
 
     const input = new InputHandler();
-
+    const player = new Player(canvas.width, canvas.height);
+    
     function animate(){
-
+        ctx.clearRect (0,0,canvas.width,canvas.height);
+        player.draw(ctx);
+        player.update();
+        requestAnimationFrame(animate); // pass in name of parent function to create endless animation loop
     }
+    animate(); 
 });
