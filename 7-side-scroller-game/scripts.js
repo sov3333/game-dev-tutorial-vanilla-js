@@ -7,10 +7,13 @@ window.addEventListener('load', function() {
     let enemies = [];
     let score = 0;
     let gameOver = false;
+    const fullScreenButton = document.getElementById('fullScreenButton');
 
     class InputHandler {
         constructor(){
             this.keys = [];
+            this.touchY = '';
+            this.touchThreshold = 30; // swipe e.g. must be at least 30 pixels to trigger event
             window.addEventListener('keydown', (e) => {
                 if ((   e.key === 'ArrowDown' || 
                         e.key === 'ArrowUp' || 
@@ -29,6 +32,28 @@ window.addEventListener('load', function() {
                     this.keys.splice(this.keys.indexOf(e.key), 1);
                 }
                 // console.log(e.key, this.keys);
+            });
+            window.addEventListener('touchstart', e => { // runs once // used to set something up
+                this.touchY = e.changedTouches[0].pageY;
+                // console.log('start');
+                // // explanation of how to use touch events here: https://youtu.be/GFO_txvwK_c?t=20244
+                // console.log(e); // check available events/properties/values in browser inspect terminal
+            });
+            window.addEventListener('touchmove', e => { // runs over and over as long as event is firing // used to make calculation e.g. direction or time of event
+                const swipeDistance = e.changedTouches[0].pageY - this.touchY;   
+                if (swipeDistance < -this.touchThreshold && this.keys.indexOf('swipe up') === -1) this.keys.push('swipe up'); 
+                else if (swipeDistance > this.touchThreshold && this.keys.indexOf('swipe down') === -1) {
+                    this.keys.push('swipe down');
+                    if (gameOver) restartGame();
+                }
+                
+                // console.log('moving');
+            });
+            window.addEventListener('touchend', e => { // runs once // used to cleanup, discard recent values not needed anymore
+                // console.log(this.keys);
+                this.keys.splice(this.keys.indexOf('swipe up'), 1);
+                this.keys.splice(this.keys.indexOf('swipe down'), 1);
+                // console.log('end');
             });
         }
     }
@@ -94,7 +119,7 @@ window.addEventListener('load', function() {
                 this.speed = 5;
             } else if (input.keys.indexOf('ArrowLeft') > -1) {
                 this.speed = -5;
-            } else if (input.keys.indexOf('ArrowUp') > -1 && this.onGround()) { // && onGround() to prevent double jump
+            } else if ((input.keys.indexOf('ArrowUp') > -1 || input.keys.indexOf('swipe up') > -1) && this.onGround()) { // && onGround() to prevent double jump
                 this.vy -= 32;
             } else {
                 this.speed = 0;
@@ -190,7 +215,6 @@ window.addEventListener('load', function() {
     function handleEnemies(deltaTime){
         if (enemyTimer > enemyInterval + randomEnemyInterval){
             enemies.push(new Enemy(canvas.width, canvas.height));
-            console.log(enemies);
             randomEnemyInterval = Math.random() * 1000 + 500;
             enemyTimer = 0;
         } else {
@@ -213,9 +237,9 @@ window.addEventListener('load', function() {
         if (gameOver){
             context.textAlign = 'center';
             context.fillStyle = 'black';
-            context.fillText('GAME OVER, press Enter to restart!', canvas.width/2, 200);
+            context.fillText('GAME OVER, press Enter or swipe down to restart!', canvas.width/2, 200);
             context.fillStyle = 'white';
-            context.fillText('GAME OVER, press Enter to restart!', canvas.width/2+2, 202);
+            context.fillText('GAME OVER, press Enter or swipe down to restart!', canvas.width/2+2, 202);
         }
     }
 
@@ -227,6 +251,18 @@ window.addEventListener('load', function() {
         gameOver = false;
         animate(0);
     }
+
+    function toggleFullScreen(){
+        console.log(document.fullscreenElement);
+        if (!document.fullscreenElement){
+            canvas.requestFullscreen().catch(err => {
+                alert(`Error, can't enable full-screen mode: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+    fullScreenButton.addEventListener('click', toggleFullScreen);
 
     const input = new InputHandler();
     const player = new Player(canvas.width, canvas.height);
