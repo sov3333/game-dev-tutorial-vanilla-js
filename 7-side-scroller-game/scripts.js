@@ -39,18 +39,47 @@ window.addEventListener('load', function() {
             this.x = 0;
             this.y = this.gameHeight - this.height; // bottom
             this.image = document.getElementById('playerImage');
+            this.frameX = 0;
+            this.frameY = 0;
+            this.speed = 0; // if +ve, player moves to right; if -ve, player moves to left
+            this.vy = 0;
+            this.weight = 1; // gravity
         }
         draw(context){
             context.fillStyle = 'white';
             context.fillRect(this.x, this.y, this.width, this.height);
-            // context.drawImage(this.image, 0, 0); // draw Player at top left
-            // context.drawImage(this.image, this.x, this.y); // draw Player at bottom left
-            // context.drawImage(this.image, this.x, this.y, this.width, this.height); // draw Player at bottom left + stretch image to fill available area
-            // context.drawImage(this.image, sx,sy,sw,sh, this.x,this.y,this.width,this.height); // draw Player at bottom left + stretch image to fill available area + select (source) frame from spritesheet
-            context.drawImage(this.image, 0,0,this.width,this.height, this.x,this.y,this.width,this.height); // draw Player at bottom left + stretch image to fill available area + select (source) frame from spritesheet
+
+            // draw Player at bottom left + select (source) frame from spritesheet + stretch image to fill available area
+            context.drawImage(this.image, this.frameX*this.width,this.frameY*this.height,this.width,this.height, this.x,this.y,this.width,this.height); 
         }
-        update(){
-            this.x++;
+        update(input){
+            if (input.keys.indexOf('ArrowRight') > -1){
+                this.speed = 5;
+            } else if (input.keys.indexOf('ArrowLeft') > -1) {
+                this.speed = -5;
+            } else if (input.keys.indexOf('ArrowUp') > -1 && this.onGround()) { // && onGround() to prevent double jump
+                this.vy -= 32;
+            } else {
+                this.speed = 0;
+            }
+            // horizontal movement
+            this.x += this.speed;
+            // introduce horizontal boundaries
+            if (this.x < 0) this.x = 0; // prevent moving past left edge of game area
+            else if (this.x > this.gameWidth - this.width) this.x = this.gameWidth - this.width // player horizontal coordinate > right edge of player rect -> prevent moving past right edge of game area
+            // vertical movement
+            this.y += this.vy; 
+            if (!this.onGround()){ // if player is in the air
+                this.vy += this.weight;
+                this.frameY = 1; // use different sprite animation row (jumping)
+            } else {
+                this.vy = 0; // set v back to 0 when jump is complete
+                this.frameY = 0; // back on ground -> back to default (onGround) animation
+            }
+            if (this.y > this.gameHeight - this.height) this.y = this.gameHeight - this.height; // player can never be below bottom of canvas
+        }
+        onGround(){
+            return this.y >= this.gameHeight - this.height; // player is standing on solid ground
         }
     }
 
@@ -72,7 +101,7 @@ window.addEventListener('load', function() {
     function animate(){
         ctx.clearRect (0,0,canvas.width,canvas.height);
         player.draw(ctx);
-        player.update();
+        player.update(input);
         requestAnimationFrame(animate); // pass in name of parent function to create endless animation loop
     }
     animate(); 
