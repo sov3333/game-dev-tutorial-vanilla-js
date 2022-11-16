@@ -41,6 +41,10 @@ window.addEventListener('load', function() {
             this.y = this.gameHeight - this.height; // bottom
             this.image = document.getElementById('playerImage');
             this.frameX = 0;
+            this.maxFrame = 8;
+            this.fps = 20;
+            this.frameTimer = 0;
+            this.frameInterval = 1000/this.fps; // how many milliseconds each frame lasts
             this.frameY = 0;
             this.speed = 0; // if +ve, player moves to right; if -ve, player moves to left
             this.vy = 0;
@@ -53,7 +57,16 @@ window.addEventListener('load', function() {
             // draw Player at bottom left + select (source) frame from spritesheet + stretch image to fill available area
             context.drawImage(this.image, this.frameX*this.width,this.frameY*this.height,this.width,this.height, this.x,this.y,this.width,this.height); 
         }
-        update(input){
+        update(input, deltaTime){
+            // sprite animation
+            if (this.frameTimer > this.frameInterval){
+                if (this.frameX >= this.maxFrame) this.frameX = 0;
+                else this.frameX++;
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime;
+            }
+            // controls
             if (input.keys.indexOf('ArrowRight') > -1){
                 this.speed = 5;
             } else if (input.keys.indexOf('ArrowLeft') > -1) {
@@ -72,8 +85,10 @@ window.addEventListener('load', function() {
             this.y += this.vy; 
             if (!this.onGround()){ // if player is in the air
                 this.vy += this.weight;
+                this.maxFrame = 5;
                 this.frameY = 1; // use different sprite animation row (jumping)
             } else {
+                this.maxFrame = 8;
                 this.vy = 0; // set v back to 0 when jump is complete
                 this.frameY = 0; // back on ground -> back to default (onGround) animation
             }
@@ -115,19 +130,33 @@ window.addEventListener('load', function() {
             this.x = this.gameWidth;
             this.y = this.gameHeight - this.height;
             this.frameX = 0;
+            this.maxFrame = 5;
+            this.fps = 20;
+            this.frameTimer = 0;
+            this.frameInterval = 1000/this.fps; // how many milliseconds each frame lasts
             this.speed = 8;
+            this.markedForDeletion = false;
         }
         draw(context){
-            context.drawImage(this.image, 0*this.width,0,this.width,this.height, this.x, this.y, this.width, this.height);
+            context.drawImage(this.image, this.frameX*this.width,0,this.width,this.height, this.x, this.y, this.width, this.height);
         }
-        update(){
+        update(deltaTime){ // keep track how many ms passed bw individual calls, after threshold reached swap frames in spritesheet
+            if (this.frameTimer > this.frameInterval){
+                if (this.frameX >= this.maxFrame) this.frameX = 0;
+                else this.frameX++;
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime;
+            }
             this.x -= this.speed;
+            if (this.x < 0 - this.width) this.markedForDeletion = true; // moved past left edge of canvas
         }
     }
 
     function handleEnemies(deltaTime){
         if (enemyTimer > enemyInterval + randomEnemyInterval){
             enemies.push(new Enemy(canvas.width, canvas.height));
+            console.log(enemies);
             randomEnemyInterval = Math.random() * 1000 + 500;
             enemyTimer = 0;
         } else {
@@ -135,8 +164,9 @@ window.addEventListener('load', function() {
         }
         enemies.forEach(enemy => {
             enemy.draw(ctx);
-            enemy.update();
-        })
+            enemy.update(deltaTime);
+        });
+        enemies = enemies.filter(enemy => !enemy.markedForDeletion);
     }
 
     function displayStatusText(){
@@ -161,7 +191,7 @@ window.addEventListener('load', function() {
         background.draw(ctx); // draw background first, so player is visible in front
         background.update(); // controls scrolling bg
         player.draw(ctx);
-        player.update(input);
+        player.update(input, deltaTime);
         // enemy1.draw(ctx);
         // enemy1.update();
         handleEnemies(deltaTime); // above 2 lines moved to handleEmenies() function
