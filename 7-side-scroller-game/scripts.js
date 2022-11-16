@@ -84,14 +84,11 @@ window.addEventListener('load', function() {
             this.frameY = 0;
         }
         draw(context){
-            context.lineWidth = 5;
-            context.strokeStyle = 'white';
-            // // rect hitbox
-            // context.strokeRect(this.x, this.y, this.width, this.height);
-            // // circular hitbox
-            context.beginPath();
-            context.arc(this.x + this.width/2, this.y + this.height/2 + 20, this.width/3, 0, Math.PI * 2);
-            context.stroke();
+            // context.lineWidth = 5;
+            // context.strokeStyle = 'white';
+            // context.beginPath();
+            // context.arc(this.x + this.width/2, this.y + this.height/2 + 20, this.width/3, 0, Math.PI * 2);
+            // context.stroke();
 
             // draw Player at bottom left + select (source) frame from spritesheet + stretch image to fill available area
             context.drawImage(this.image, this.frameX*this.width,this.frameY*this.height,this.width,this.height, this.x,this.y,this.width,this.height); 
@@ -190,12 +187,11 @@ window.addEventListener('load', function() {
             this.markedForDeletion = false;
         }
         draw(context){
-            context.lineWidth = 5;
-            context.strokeStyle = 'white';
-            // context.strokeRect(this.x, this.y, this.width, this.height);
-            context.beginPath();
-            context.arc(this.x + this.width/2 - 20, this.y + this.height/2, this.width/3, 0, Math.PI * 2);
-            context.stroke();
+            // context.lineWidth = 5;
+            // context.strokeStyle = 'white';
+            // context.beginPath();
+            // context.arc(this.x + this.width/2 - 20, this.y + this.height/2, this.width/3, 0, Math.PI * 2);
+            // context.stroke();
 
             context.drawImage(this.image, this.frameX*this.width,0,this.width,this.height, this.x, this.y, this.width, this.height);
         }
