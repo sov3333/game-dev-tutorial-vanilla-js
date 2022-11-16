@@ -5,6 +5,7 @@ window.addEventListener('load', function() {
     canvas.width = 800;
     canvas.height = 720;
     let enemies = [];
+    let score = 0;
 
     class InputHandler {
         constructor(){
@@ -149,7 +150,10 @@ window.addEventListener('load', function() {
                 this.frameTimer += deltaTime;
             }
             this.x -= this.speed;
-            if (this.x < 0 - this.width) this.markedForDeletion = true; // moved past left edge of canvas
+            if (this.x < 0 - this.width){
+                this.markedForDeletion = true; // moved past left edge of canvas
+                score++;
+            } 
         }
     }
 
@@ -169,8 +173,12 @@ window.addEventListener('load', function() {
         enemies = enemies.filter(enemy => !enemy.markedForDeletion);
     }
 
-    function displayStatusText(){
-
+    function displayStatusText(context){
+        context.font = '40px Helvetica';
+        context.fillStyle = 'black';
+        context.fillText('Score: ' + score, 20, 50);
+        context.fillStyle = 'white';
+        context.fillText('Score: ' + score, 22, 52); // with offset to create shadow manually
     }
 
     const input = new InputHandler();
@@ -195,6 +203,7 @@ window.addEventListener('load', function() {
         // enemy1.draw(ctx);
         // enemy1.update();
         handleEnemies(deltaTime); // above 2 lines moved to handleEmenies() function
+        displayStatusText(ctx);
         requestAnimationFrame(animate); // pass in name of parent function to create endless animation loop
     }
     animate(0); 
