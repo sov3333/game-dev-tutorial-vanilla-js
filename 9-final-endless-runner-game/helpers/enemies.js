@@ -38,9 +38,14 @@ export class FlyingEnemy extends Enemy {
         this.speedY = 0;
         this.maxFrame = 5;
         this.image = enemy_fly;
+        this.angle = 0;
+        this.va = Math.random() * 0.1 + 0.1; // Velocity of Angle, between 0.1-0.2
     }
     update(deltaTime){
         super.update(deltaTime);
+        this.angle += this.va;
+        // passing a slowly increasing angle to Math.sin() will map positions of our enemies along a `sine wave`.
+        this.y += Math.sin(this.angle);
     }
 }
 
