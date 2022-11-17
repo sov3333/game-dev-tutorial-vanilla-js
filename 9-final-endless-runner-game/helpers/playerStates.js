@@ -131,8 +131,6 @@ export class Diving extends State {
             }
         } else if (input.includes('Enter') && this.game.player.onGround()){
             this.game.player.setState(states.ROLLING, 2);
-        } else if (input.includes('ArrowDown')){
-            this.game.player.setState(states.DIVING, 0);
         }
     } 
 }
