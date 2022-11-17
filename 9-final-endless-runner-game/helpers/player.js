@@ -46,9 +46,9 @@ export class Player {
         }
     }
     draw(context){
-        // visual aid
-        context.strokeStyle = 'red';
-        context.strokeRect(this.x, this.y, this.width, this.height);
+        // // visual aid
+        // context.strokeStyle = 'red';
+        // context.strokeRect(this.x, this.y, this.width, this.height);
         // draw
         context.drawImage(this.image, this.width*this.frameX,this.height*this.frameY,this.width,this.height, this.x,this.y,this.width,this.height);
     }
