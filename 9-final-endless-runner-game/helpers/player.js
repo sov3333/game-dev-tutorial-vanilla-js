@@ -6,7 +6,7 @@ export class Player {
         this.width = 100; // single frame width
         this.height = 91.3; // single frame height
         this.x = 50;
-        this.y = this.game.height - this.height;
+        this.y = this.game.height - this.height - this.game.groundMargin;
         this.vy = 0;
         this.weight = 1;
         // javascript automatically creates references to all elements with IDs into the global namespace, using it's ID as a variable name:
@@ -53,7 +53,7 @@ export class Player {
         context.drawImage(this.image, this.width*this.frameX,this.height*this.frameY,this.width,this.height, this.x,this.y,this.width,this.height);
     }
     onGround(){
-        return this.y >= this.game.height - this.height;
+        return this.y >= this.game.height - this.height - this.game.groundMargin;
     }
     setState(state){
         this.currentState = this.states[state];
