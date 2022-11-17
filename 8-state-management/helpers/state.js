@@ -24,6 +24,7 @@ export class StandingLeft extends State {
         this.player = player;
     }
     enter(){
+        this.player.maxFrame = 6;
         this.player.frameY = 1;
         this.player.speed = 0;
     }
@@ -41,6 +42,7 @@ export class StandingRight extends State {
         this.player = player;
     }
     enter(){
+        this.player.maxFrame = 6;
         this.player.frameY = 0;
         this.player.speed = 0;
     }
@@ -57,6 +59,7 @@ export class SittingLeft extends State {
         this.player = player;
     }
     enter(){
+        this.player.maxFrame = 4;
         this.player.frameY = 9;
         this.player.speed = 0;
     }
@@ -71,6 +74,7 @@ export class SittingRight extends State {
         this.player = player;
     }
     enter(){
+        this.player.maxFrame = 4;
         this.player.frameY = 8;
         this.player.speed = 0;
     }
@@ -85,6 +89,7 @@ export class RunningLeft extends State {
         this.player = player;
     }
     enter(){
+        this.player.maxFrame = 8;
         this.player.frameY = 7;
         this.player.speed = -this.player.maxSpeed;
     }
@@ -100,6 +105,7 @@ export class RunningRight extends State {
         this.player = player;
     }
     enter(){
+        this.player.maxFrame = 8;
         this.player.frameY = 6;
         this.player.speed = this.player.maxSpeed;
     }
@@ -115,6 +121,7 @@ export class JumpingLeft extends State {
         this.player = player;
     }
     enter(){
+        this.player.maxFrame = 6;
         this.player.frameY = 3;
         if (this.player.onGround()) this.player.vy -= 10;
         this.player.speed = -this.player.maxSpeed * 0.5;
@@ -133,6 +140,7 @@ export class JumpingRight extends State {
         this.player = player;
     }
     enter(){
+        this.player.maxFrame = 6;
         this.player.frameY = 2;
         if (this.player.onGround()) this.player.vy -= 10;
         this.player.speed = this.player.maxSpeed * 0.5;

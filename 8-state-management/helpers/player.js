@@ -15,10 +15,13 @@ export default class Player {
         this.weight = 0.5;
         this.frameX = 0;
         this.frameY = 0;
+        this.maxFrame = 6;
         this.speed = 0;
-        this.maxSpeed = 10
+        this.maxSpeed = 15; // change to update horizontal movement speed
     }
     draw(context){
+        if (this.frameX < this.maxFrame) this.frameX++;
+        else this.frameX = 0;
         context.drawImage(this.image, this.width*this.frameX,this.height*this.frameY,this.width,this.height, this.x,this.y,this.width,this.height);
     }
     update(input){
