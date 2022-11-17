@@ -46,6 +46,7 @@ export class Player {
         }
     }
     draw(context){
+        if (this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
         // // visual aid
         // context.strokeStyle = 'red';
         // context.strokeRect(this.x, this.y, this.width, this.height);
