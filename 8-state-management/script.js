@@ -1,5 +1,6 @@
 import Player from './helpers/player.js';
 import InputHandler from './helpers/input.js';
+import {drawStatusText} from './helpers/utils.js'
 
 window.addEventListener('load', function(){
     const loading = document.getElementById('loading');
@@ -10,11 +11,13 @@ window.addEventListener('load', function(){
     canvas.height = window.innerHeight;
 
     const player = new Player(canvas.width, canvas.height);
-    player.draw(ctx);
     const input = new InputHandler();
     
     function animate(){
-        console.log(input.lastKey);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        // console.log(input.lastKey);
+        player.draw(ctx);
+        drawStatusText(ctx, input);
         requestAnimationFrame(animate);
     };
     animate();
