@@ -30,9 +30,10 @@ window.addEventListener('load', function(){
             this.enemyInterval = 1000;
             this.debug = false;
             this.score = 0;
+            this.winningScore = 40;
             this.fontColor = 'black';
             this.time = 0;
-            this.maxTime = 10000;
+            this.maxTime = 30000;
             this.gameOver = false;
             this.lives = 5;
             this.player.currentState = this.player.states[0];
