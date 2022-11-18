@@ -9,5 +9,5 @@ Code-along to [JavaScript Game Development Course for Beginners](https://youtu.b
 - [ ] Lesson 5: Point & shoot game
 - [ ] Lesson 6: Enemy variety
 - [x] Lesson 7: Side-scroller game with mobile support
-- [ ] Lesson 8: State management
-- [ ] Lesson 9: Final endless runner game with all the features
+- [x] Lesson 8: State management
+- [x] Lesson 9: Final endless runner game with all the features
